@@ -11,7 +11,10 @@ export default App;
 
 
 
-//  What is react query
+ 
+//  Setting up react-query
 
 
-// src -> react-query -> TodoList.tsx
+// npm i tanstack/react-query@4.28
+
+//  now in main.tsx import couple of classes on top 
