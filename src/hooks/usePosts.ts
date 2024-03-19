@@ -9,29 +9,35 @@ interface Post {
     userId: number;
   }
 
-const usePosts = (userId :number | undefined)=>{  // because initially no user is selected
+  interface PostQuery {
+    page: number,
+    pageSize : number
+  }
+
+ const usePosts = (query : PostQuery)=>{  
 
  
-
-    const fecthPosts = ()=>  axios
-.get('https://jsonplaceholder.typicode.com/posts',{params:{userId}}).then(res=>res.data)
-
-// it expecting object so its like {userIs : userIs } or {userId}
+ 
+ 
  return useQuery<Post[],Error>({
-    // queryKey : ['Posts'],
-    queryKey :userId? ['users',userId,'Posts'] : ['Posts'], // this is same pattern we follow , when designing urls for our api's
-    // /users/1/posts       // left to right data becomes more specific
-    queryFn :  fecthPosts,
-    staleTime : 1 * 60 * 1000 // 1m
+      queryKey : ['posts', query], 
+     queryFn :  ()=>  
+     axios
+     .get('https://jsonplaceholder.typicode.com/posts',{
+       params:{
+          _start:(query.page - 1) * query.pageSize,
+          _limit : query.pageSize
+         }})
+    .then(res=>res.data),
+    staleTime : 1 * 60 * 1000, // 1m ,
+    placeholderData : (oldData)=> oldData || []
+ 
   })
 
 }
 
 export default usePosts;
 
+ 
 
-// now we need to structure our keys little bit different
-
-
-// everytime userId changes our queryKey changes same as dependencies array 
-//now we need to pass userId to backEnd , jsonplace holder supports url using params 
+//  keepPreviousData is replced by placeHOlderData 
