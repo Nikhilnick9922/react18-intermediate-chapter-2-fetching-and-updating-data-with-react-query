@@ -10,17 +10,18 @@ interface Todo {
 
 const TodoList = () => {
 
+  const fetchTodos =()=>  
+        axios
+             .get<Todo[]>('https://jsonplaceholder.typicode.com/todos')
+             .then(res=>res.data)     
 
-
-   const fetchTodos =()=>  axios
-  .get<Todo[]>('https://jsonplaceholder.typicode.com/todos').then(res=>res.data)     
-
-  // it does not know which error is there 
- const {data : todos , error} = useQuery<Todo[] , Error  >({  
+  const {data : todos , error , isLoading} = useQuery<Todo[] , Error  >({  
     queryKey : ['todos' ],
     queryFn :  fetchTodos
 
   })
+
+  if(isLoading) return <p>Loading....</p>
  
 if(error) return <p>{error.message}</p>
   
@@ -39,6 +40,4 @@ export default TodoList;
 
 
  
-//  now go to app component and return TodoList
-
-//  in axios all errors are interface of Error object 
+ 
