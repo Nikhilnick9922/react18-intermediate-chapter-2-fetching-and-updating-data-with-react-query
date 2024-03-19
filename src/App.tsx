@@ -9,12 +9,8 @@ export default App;
 
 
 
+//   Fetching Data 
 
 
- 
-//  Setting up react-query
 
-
-// npm i tanstack/react-query@4.28
-
-//  now in main.tsx import couple of classes on top 
+// now go to ToDolist.tsx

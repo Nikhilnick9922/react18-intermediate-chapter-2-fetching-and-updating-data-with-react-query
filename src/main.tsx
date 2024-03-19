@@ -21,4 +21,4 @@ ReactDOM.createRoot(
 
  
 
-// QueryClient - mananging & caching remote data in react-query 
+ 
