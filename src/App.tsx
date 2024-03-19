@@ -9,13 +9,6 @@ export default App;
 
 
 
-//     Using React Query DevTools
-
-
-
-//  its powerful tool for debugging and monitoring our queries 
-
-// npm i @tantrak/react-query-devtools@4.28
+//     Customizing Query Settings
 
  
-// import in main -> ReactQueryDevtools // select with blue Icon

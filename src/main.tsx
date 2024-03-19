@@ -9,7 +9,21 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';      // imp
 
  
 
-const queryClient = new QueryClient(); 
+const queryClient = new QueryClient(
+//   {
+//   defaultOptions : {
+//     queries : {
+//       retry : 3,
+//       refetchInterval : 300_000, //5m   cacheTime replace with refechInterval
+//       staleTime :  5 * 1000,   // how much time data consider as fresh
+//       refetchOnWindowFocus : false,
+//       refetchOnReconnect : false,  // if client goes offline and comes online it refresh
+//       refetchOnMount : false
+
+//     }
+//   }
+// }
+); 
 
 ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,6 +37,17 @@ ReactDOM.createRoot(
 );
 
 
+//  react will automatically stales the data in 3 situations 
+        // when network is reconnected
+        // when a componet is mounted
+        // when window is refocused       - new tab shift 
  
 
- // this is only for devlopement in production this is not included
+ 
+
+        // only value we have to change sometimes is staleTime , needed higher stale-time for some queries 
+
+
+
+
+  //  we can also overrighte default setting in useQuery in component -> useTodos 
