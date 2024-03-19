@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-
+ 
 interface Todo {
   id: number;
   title: string;
@@ -11,51 +10,35 @@ interface Todo {
 
 const TodoList = () => {
 
-  // analyze the signature
-  const fetchTodos =()=>  axios
-  .get<Todo[]>('https://jsonplaceholder.typicode.com/todos').then(res=>res.data)     // we only want response data not the whole object
 
 
- const {data : todos} = useQuery({ // key is used for caching access
+   const fetchTodos =()=>  axios
+  .get<Todo[]>('https://jsonplaceholder.typicode.com/todos').then(res=>res.data)     
+
+  // it does not know which error is there 
+ const {data : todos , error} = useQuery<Todo[] , Error  >({  
     queryKey : ['todos' ],
     queryFn :  fetchTodos
 
   })
-// we can also use fetch api 
-
-
-  // const [todos, setTodos] = useState<Todo[]>([]);
-  // const [error, setError] = useState('');
-
-  // useEffect(() => {
-  //   axios
-  //     .get('https://jsonplaceholder.typicode.com/todos')
-  //     .then((res) => setTodos(res.data))
-  //     .catch((error) => setError(error));
-  // }, []);
-
-  // if (error) return <p>{error}</p>;
-
-
+ 
+if(error) return <p>{error.message}</p>
   
   return (
     <ul className="list-group">
-      {todos?.map((todo) => (   // todos undefined erro because called to backend might be fail , so use optional chaining
+      {todos?.map((todo) => (    
         <li key={todo.id} className="list-group-item">
           {todo.title}
         </li>
       ))}
     </ul>
   );
-};  // with this we get auto Retries 
+};  
 
 export default TodoList;
 
 
  
-// we can also impliment the logic outside the query , in function fetchTodos 
+//  now go to app component and return TodoList
 
-//  in type script we have to be more specific than `any` type so we used `Todo[]`
-
-
-// query has bunch of properties like data , error , isLoading and so on
+//  in axios all errors are interface of Error object 
