@@ -1,20 +1,19 @@
  
-import { useState } from 'react';
-import usePosts from '../hooks/usePosts';
+ import usePosts from '../hooks/usePosts';
+import React from 'react';
 
  
 
 const PostList = () => {
  
-  const pageSize = 10;  // since the pageSize is not going to change it constant, in futreu use state
-  const [page,setPage] = useState(1);
+  const pageSize = 10;  
+  // const [page,setPage] = useState(1);
 
 
 
  
- const {data:posts , error , isLoading} = usePosts({page,pageSize} )  // don't want to pass multiple values , so that makes it ugly
- // it would be nice if we can encapsulted all those value in query object
- 
+ const {data , error , isLoading ,fetchNextPage ,isFetchingNextPage} = usePosts({pageSize} )   
+  
   if(isLoading) return <p>Loading...</p>
   
   if (error) return <p>{error?.message}</p>;
@@ -23,15 +22,18 @@ const PostList = () => {
   <>
  
     <ul className="list-group">
-      {posts?.map((post) => (
-        <li key={post.id} className="list-group-item">
+      {data?.pages.map((page, index)=>
+        <React.Fragment key={index}>
+          {page.map(post=><li key={post.id} className="list-group-item">
           {post.title}
-        </li>
-      ))}
+        </li>)}
+        </React.Fragment>)}
+      
     </ul>
-    <button onClick={()=> setPage(page-1)} disabled = {page===1} className="btn btn-primary my-3 me-1">Previous</button>
-    <button onClick={()=> setPage(page + 1)}   className="btn btn-primary my-3">Next</button>
- 
+    {/* <button onClick={()=> setPage(page-1)} disabled = {page===1} className="btn btn-primary my-3 me-1">Previous</button> */}
+    <button disabled= { isFetchingNextPage} onClick={()=>  fetchNextPage ()}   className="btn btn-primary my-3">
+      {isFetchingNextPage ? "Loading...": "Load More"}</button>
+ {/* inifite query returns fecchNext function */}
   </>
   );
 };
@@ -40,8 +42,10 @@ export default PostList;
 
  
 
-//  first we can remove filtering by user so that we can focus on pagination
+//   so fetchNextPage will call getNextPageParam then it will pass it to queryFn
 
-// ms - margin start me - margin end
 
-//  keepPreousData will keep currentdata intil frame until next data is loaded
+//  isFetchinNextpage is use to disable the button 
+
+
+// is data is no longer posts array , its object of inifinte pages , which includes posts

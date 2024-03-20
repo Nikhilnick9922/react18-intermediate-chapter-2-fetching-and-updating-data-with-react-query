@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery   } from "@tanstack/react-query";
 import axios from "axios";
 
 
@@ -10,7 +10,7 @@ interface Post {
   }
 
   interface PostQuery {
-    page: number,
+    // page: number,
     pageSize : number
   }
 
@@ -19,18 +19,21 @@ interface Post {
  
  
  
- return useQuery<Post[],Error>({
+ return useInfiniteQuery<Post[],Error>({
       queryKey : ['posts', query], 
-     queryFn :  ()=>  
-     axios
+     queryFn :  ({pageParam = 1}  )=> axios    // best practice is initialize to 1 , so that we can get data for the first page
      .get('https://jsonplaceholder.typicode.com/posts',{
        params:{
-          _start:(query.page - 1) * query.pageSize,
+          _start:(pageParam - 1) * query.pageSize,
           _limit : query.pageSize
          }})
     .then(res=>res.data),
     staleTime : 1 * 60 * 1000, // 1m ,
-    placeholderData : (oldData)=> oldData || []
+    keepPreviousData :  true,
+ 
+    getNextPageParam:(lastPage, allPages) => {
+      return lastPage.length > 0 ? allPages.length + 1 : undefined;
+    }
  
   })
 
@@ -39,5 +42,18 @@ interface Post {
 export default usePosts;
 
  
+//   when we use infinite scrolling , we can't use state since it makes inconsistance with 
+          //  paging and caching
+          // and they handle pagination automatically
 
-//  keepPreviousData is replced by placeHOlderData 
+//  for nextPageParam logic this is best we can do , since good api should return 
+//  number of pages ahead of time 
+
+//  when user clicks on loadMore button react-query calls this function 
+
+
+//  pageParam is object that react-query will pass to queryFn , & replace query.page with pageParam
+
+
+
+// installed react-query@4.28

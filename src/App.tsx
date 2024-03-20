@@ -9,7 +9,11 @@ export default App;
 
 
 
-//    Paginated Queries
+ 
 
 
 
+// Infinite Queries
+
+
+// let't focus on loading more data 
